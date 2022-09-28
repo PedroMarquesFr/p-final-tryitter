@@ -8,5 +8,6 @@ namespace Tryitter.Web.Models
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
 
+        public User? User { get; set; }
     }
 }
