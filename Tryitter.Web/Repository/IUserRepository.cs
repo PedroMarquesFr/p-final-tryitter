@@ -3,9 +3,10 @@ namespace Tryitter.Web.Repository;
 
 public interface IUserRepository
 {
-  public void Add(User user);
+  public Task<User> Add(User user);
   public void Delete(User user);
   public void Update(User user);
-  public User? Get(Guid id);
-  public IEnumerable<User> GetAll();
+  public Task<User>? Get(Guid id);
+  public Task<User>? GetUserByLoginName(string Login);
+  public Task<IEnumerable<User>> GetAll();
 }
