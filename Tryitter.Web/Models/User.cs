@@ -8,6 +8,5 @@ namespace Tryitter.Web.Models
         public string Password { get; set; } = null!;
 
         public ICollection<Post>? Posts { get; set; }
-
     }
 }

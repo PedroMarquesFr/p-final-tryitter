@@ -2,52 +2,57 @@ using Microsoft.EntityFrameworkCore;
 using Tryitter.Web.Models;
 
 namespace Tryitter.Web.Repository;
-public class UserRepository: IUserRepository
+public class UserRepository : IUserRepository
 {
-  protected readonly DatabaseContext _context;
-  public UserRepository(DatabaseContext context)
-  {
-    _context = context;
-  }
+    protected readonly DatabaseContext _context;
+    public UserRepository(DatabaseContext context)
+    {
+        _context = context;
+    }
 
-  public virtual void Add(User user)
-  {
-    _context.Add(user);
+    public async Task<User> Add(User user)
+    {
+        _context.Add(user);
 
-    _context.SaveChanges();
-  }
-  public virtual void Delete(User user)
-  {
-    
-    var result = _context.User.Include(e => e.Posts).Single(p => p.UserId == user.UserId);
+        await _context.SaveChangesAsync();
+        return user;
+    }
+    public async void Delete(User user)
+    {
 
-    _context.Remove(result);
+        var result = _context.User.Include(e => e.Posts).Single(p => p.UserId == user.UserId);
 
-    _context.Remove(result.Posts);
+        _context.Remove(result);
 
-    _context.SaveChanges();
-    
-  }
+        _context.Remove(result.Posts);
 
-  public virtual void Update(User user)
-  {
-    _context.Update(user);
+        await _context.SaveChangesAsync();
 
-    _context.SaveChanges();
-  }
+    }
 
-  public virtual User? Get(Guid id)
-  {
-    var user = _context.User.Where(e => e.UserId == id).First();
+    public async void Update(User user)
+    {
+        _context.Update(user);
 
-    return user;
-  }
+        await _context.SaveChangesAsync();
+    }
 
-  public virtual IEnumerable<User> GetAll()
-  {
-    var users = _context.User.ToList();
+    public async Task<User>? Get(Guid UserId)
+    {
+        var user = await _context.User.FindAsync(UserId);
+        return user!;
+    }
+    public async Task<User>? GetUserByLoginName(string Login)
+    {
+        var user = await _context.User.FirstOrDefaultAsync(i => i.Login == Login);
+        return user!;
+    }
 
-    return users;
-  }
+    public async Task<IEnumerable<User>> GetAll()
+    {
+        var users = await _context.User.ToListAsync();
+
+        return users;
+    }
 
 }
