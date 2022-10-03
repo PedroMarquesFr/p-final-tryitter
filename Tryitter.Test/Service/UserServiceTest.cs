@@ -57,5 +57,52 @@ namespace Tryitter.Test.Service
             //Assert
             await act.Should().ThrowAsync<ArgumentException>();
         }
+
+        [Theory]
+        [InlineData("Joao", "joao123", "1234")]
+        [InlineData("Albert", "1234", "senha123")]
+        [InlineData("a", "a123", "1010")]
+        public async void ShouldDeleteAnUser(string nickname, string login, string password)
+        {
+            //Arrange
+            User user = new() { Nickname = nickname, Login = login, Password = password };
+            var context = new TryitterTestContext();
+            var mockRepository = new Mock<IUserRepository>();
+
+            mockRepository.Setup(library => library.Get(user.UserId)).ReturnsAsync(user); //forcar a funcao a retornar um valor assincrono
+            mockRepository.Setup(library => library.Delete(user.UserId));
+
+            var service = new UserService(mockRepository.Object);
+
+            //Act
+            Func<Task> act = async () => await service.DeleteUser(user.UserId);
+
+            //Assert
+
+            await act.Should().NotThrowAsync<ArgumentException>();
+        }
+
+        [Theory]
+        [InlineData("Joao", "joao123", "1234")]
+        [InlineData("Albert", "1234", "senha123")]
+        [InlineData("a", "a123", "1010")]
+        public async void ShouldThrownAnErrorWhenUserDoesntExist(string nickname, string login, string password)
+        {
+            //Arrange
+            User user = new() { Nickname = nickname, Login = login, Password = password };
+            var context = new TryitterTestContext();
+            var mockRepository = new Mock<IUserRepository>();
+
+            mockRepository.Setup(library => library.Get(user.UserId)).ReturnsAsync(value: null); //forcar a funcao a retornar um valor assincrono
+
+            var service = new UserService(mockRepository.Object);
+
+            //Act
+            Func<Task> act = async () => await service.DeleteUser(user.UserId);
+
+            //Assert
+
+            await act.Should().ThrowAsync<ArgumentException>();
+        }
     }
 }

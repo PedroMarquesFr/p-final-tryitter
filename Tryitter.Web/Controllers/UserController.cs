@@ -21,7 +21,7 @@ public class UserController : Controller
         try
         {
             var output = await _service.CreateUser(user);
-            return Ok(output);
+            return CreatedAtAction("GetUser", new { id = output.UserId }, output);
         }
         catch (ArgumentException ex)
         {
@@ -29,28 +29,34 @@ public class UserController : Controller
         }
     }
 
-    // [HttpDelete("{id}")]
-    // public void DeleteUser(Guid id)
-    // {
-    //     var user = _repository.Get(id);
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteUser(Guid id)
+    {
+        try
+        {
+            await _service.DeleteUser(id);
+            return NoContent();
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 
-    //     if (user == null) return;
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetUser(string id)
+    {
+        var user = await _service.GetUser(new Guid(id));
+        if (user == null) return NotFound();
+        return Ok(user);
+    }
 
-    //     _repository.Delete(user);
-    // }
-
-    // [HttpGet("{id}")]
-    // public User? GetUser(Guid id)
-    // {
-
-    //     return _repository.Get(id);
-    // }
-
-    // [HttpPut()]
-    // public void UpdatePost(User user)
-    // {
-    //     _repository.Update(user);
-    // }
+    [HttpPut()]
+    public async Task<IActionResult> UpdateUser(UserDTO user)
+    {
+        var updatedUser = await _service.UpdateUser(user);
+        return Ok(updatedUser);
+    }
 
 
 }
