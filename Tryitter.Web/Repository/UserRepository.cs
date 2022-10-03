@@ -17,17 +17,15 @@ public class UserRepository : IUserRepository
         await _context.SaveChangesAsync();
         return user;
     }
-    public async void Delete(User user)
+    public async Task Delete(Guid id)
     {
 
-        var result = _context.User.Include(e => e.Posts).Single(p => p.UserId == user.UserId);
-
+        var result = _context.User.Include(e => e.Posts).Single(p => p.UserId == id);
         _context.Remove(result);
 
-        _context.Remove(result.Posts);
+        // if (result.Posts is not null) _context.Remove(result.Posts);
 
         await _context.SaveChangesAsync();
-
     }
 
     public async void Update(User user)
@@ -37,15 +35,15 @@ public class UserRepository : IUserRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task<User>? Get(Guid UserId)
+    public async Task<User?> Get(Guid UserId)
     {
         var user = await _context.User.FindAsync(UserId);
-        return user!;
+        return user;
     }
-    public async Task<User>? GetUserByLoginName(string Login)
+    public async Task<User?> GetUserByLoginName(string Login)
     {
         var user = await _context.User.FirstOrDefaultAsync(i => i.Login == Login);
-        return user!;
+        return user;
     }
 
     public async Task<IEnumerable<User>> GetAll()
