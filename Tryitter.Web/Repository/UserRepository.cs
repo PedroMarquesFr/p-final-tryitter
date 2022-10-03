@@ -28,21 +28,21 @@ public class UserRepository : IUserRepository
         await _context.SaveChangesAsync();
     }
 
-    public async void Update(User user)
+    public async Task Update(User user)
     {
         _context.Update(user);
 
         await _context.SaveChangesAsync();
-    }
+    }   
 
     public async Task<User?> Get(Guid UserId)
     {
-        var user = await _context.User.FindAsync(UserId);
+        var user = await _context.User.AsNoTracking().FirstOrDefaultAsync(a => a.UserId == UserId);
         return user;
     }
     public async Task<User?> GetUserByLoginName(string Login)
     {
-        var user = await _context.User.FirstOrDefaultAsync(i => i.Login == Login);
+        var user = await _context.User.AsNoTracking().FirstOrDefaultAsync(i => i.Login == Login);
         return user;
     }
 

@@ -32,4 +32,11 @@ public class UserService : IUserService
         // if (userExists != null) throw new ArgumentException("User already exists");
         return user;
     }
+    public async Task<User> UpdateUser(User user)
+    {
+        var userExists = await _repository.Get(user.UserId);
+        if (userExists is null) throw new ArgumentException("User doesnt exists.");
+        await _repository.Update(user);
+        return user;
+    }
 }

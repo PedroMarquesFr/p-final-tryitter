@@ -51,11 +51,12 @@ public class UserController : Controller
         return Ok(user);
     }
 
-    // [HttpPut()]
-    // public void UpdateUser(User user)
-    // {
-    //     _repository.Update(user);
-    // }
+    [HttpPut()]
+    public async Task<IActionResult> UpdateUser(User user)
+    {
+        var updatedUser = await _service.UpdateUser(user);
+        return Ok(updatedUser);
+    }
 
 
 }
