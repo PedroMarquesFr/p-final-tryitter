@@ -52,7 +52,7 @@ public class UserController : Controller
     }
 
     [HttpPut()]
-    public async Task<IActionResult> UpdateUser(User user)
+    public async Task<IActionResult> UpdateUser(UserDTO user)
     {
         var updatedUser = await _service.UpdateUser(user);
         return Ok(updatedUser);
