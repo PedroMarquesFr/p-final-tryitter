@@ -14,6 +14,19 @@ public class UserController : Controller
     {
         _service = service;
     }
+    [HttpPost("Authentication")]
+    public async Task<IActionResult> Authenticate([FromBody] LoginData loginData)
+    {
+        try
+        {
+            string token = await _service.Authenticate(loginData);
+            return Ok(new { token });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 
     [HttpPost()]
     public async Task<IActionResult> CreateUser([FromBody] User user)
