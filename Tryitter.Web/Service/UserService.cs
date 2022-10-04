@@ -17,7 +17,7 @@ public class UserService : IUserService
     {
         var user = await _repository.GetUserByLoginName(userData.Login);
         if (user is null) throw new InvalidOperationException("User not found");
-        var token = new TokenGenerator().Generate();
+        var token = new TokenGenerator().Generate(user);
 
         return token;
     }
