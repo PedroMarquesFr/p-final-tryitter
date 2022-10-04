@@ -19,8 +19,8 @@ public class UserController : Controller
     {
         try
         {
-            string token = await _service.Authenticate(loginData);
-            return Ok(new { token });
+            var token = await _service.Authenticate(loginData);
+            return Ok(token);
         }
         catch (InvalidOperationException ex)
         {

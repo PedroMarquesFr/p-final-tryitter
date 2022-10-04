@@ -13,13 +13,13 @@ public class UserService : IUserService
         _repository = repository;
     }
 
-    public async Task<string> Authenticate(LoginData userData)
+    public async Task<dynamic> Authenticate(LoginData userData)
     {
         var user = await _repository.GetUserByLoginName(userData.Login);
         if (user is null) throw new InvalidOperationException("User not found");
         var token = new TokenGenerator().Generate(user);
-
-        return token;
+        user.Password = "";
+        return new { token, user };
     }
 
     public async Task<User> CreateUser(User user)
