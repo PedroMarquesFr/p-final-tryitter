@@ -8,5 +8,6 @@ public interface IUserService
     public Task DeleteUser(Guid id);
     public Task<User> UpdateUser(UserDTO user);
     public Task<User?> GetUser(Guid UserId);
+    public Task<dynamic> Authenticate(LoginData loginData);
     //   public IEnumerable<User> GetAll();
 }

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Tryitter.Web.Models;
 using Tryitter.Web.Repository;
@@ -14,8 +15,22 @@ public class UserController : Controller
     {
         _service = service;
     }
+    [HttpPost("Authentication")]
+    public async Task<IActionResult> Authenticate([FromBody] LoginData loginData)
+    {
+        try
+        {
+            var token = await _service.Authenticate(loginData);
+            return Ok(token);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 
     [HttpPost()]
+    [AllowAnonymous]
     public async Task<IActionResult> CreateUser([FromBody] User user)
     {
         try
@@ -30,6 +45,7 @@ public class UserController : Controller
     }
 
     [HttpDelete("{id}")]
+    [Authorize]
     public async Task<IActionResult> DeleteUser(Guid id)
     {
         try
@@ -44,6 +60,7 @@ public class UserController : Controller
     }
 
     [HttpGet("{id}")]
+    [Authorize]
     public async Task<IActionResult> GetUser(string id)
     {
         var user = await _service.GetUser(new Guid(id));
@@ -52,6 +69,7 @@ public class UserController : Controller
     }
 
     [HttpPut()]
+    [Authorize]
     public async Task<IActionResult> UpdateUser(UserDTO user)
     {
         var updatedUser = await _service.UpdateUser(user);

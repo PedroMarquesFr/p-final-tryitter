@@ -13,6 +13,16 @@ public class UserService : IUserService
         _repository = repository;
     }
 
+    public async Task<dynamic> Authenticate(LoginData userData)
+    {
+        var user = await _repository.GetUserByLoginName(userData.Login);
+        if (user is null) throw new InvalidOperationException("User not found");
+        if(user.Password != userData.Password) throw new InvalidOperationException("Invalid password");
+        var token = new TokenGenerator().Generate(user);
+        user.Password = "";
+        return new { token, user };
+    }
+
     public async Task<User> CreateUser(User user)
     {
         var userExists = await _repository.GetUserByLoginName(user.Login)!;
@@ -27,7 +37,7 @@ public class UserService : IUserService
         if (userExists is null) throw new ArgumentException("User doesnt exists.");
         await _repository.Delete(id);
     }
-    public async Task<User> GetUser(Guid UserId)
+    public async Task<User?> GetUser(Guid UserId)
     {
         var user = await _repository.Get(UserId);
         // if (userExists != null) throw new ArgumentException("User already exists");
