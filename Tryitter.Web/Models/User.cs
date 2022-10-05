@@ -6,6 +6,9 @@ namespace Tryitter.Web.Models
     public class User
     {
         public Guid UserId { get; set; }
+
+        [Required]
+        [StringLength(15, MinimumLength = 4, ErrorMessage = "Invalid Nickname length")]
         public string Nickname { get; set; } = null!;
 
         [EmailAddress(ErrorMessage = "Invalid email")]

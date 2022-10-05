@@ -33,14 +33,14 @@ public class UserService : IUserService
 
     public async Task DeleteUser(Guid id)
     {
-        var userExists = await _repository.Get(id);
+        var userExists = await _repository.Get(id); 
         if (userExists is null) throw new ArgumentException("User doesnt exists.");
         await _repository.Delete(id);
     }
     public async Task<User?> GetUser(Guid UserId)
     {
         var user = await _repository.Get(UserId);
-        // if (userExists != null) throw new ArgumentException("User already exists");
+        if (user == null) throw new InvalidDataException("User not found");
         return user;
     }
     public async Task<User> UpdateUser(UserDTO userdto)

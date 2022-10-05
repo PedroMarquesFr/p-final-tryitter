@@ -65,6 +65,21 @@ public class PostController : Controller
         }
     }
 
+    // [HttpGet("/user/{id}")]
+    // [Authorize]
+    // public async Task<IActionResult> GetPostByUser(Guid userid)
+    // {
+    //     try
+    //     {
+    //         var post = await _service.GetPostsByUser(userid)!;
+    //         return Ok(post);
+    //     }
+    //     catch (ArgumentException ex)
+    //     {
+    //         return BadRequest(ex.Message);
+    //     }
+    // }
+
     [HttpPut()]
     [Authorize]
     public async Task<IActionResult> UpdatePost(PostDTO post)

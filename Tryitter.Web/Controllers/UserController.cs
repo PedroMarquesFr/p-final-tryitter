@@ -63,9 +63,15 @@ public class UserController : Controller
     [Authorize]
     public async Task<IActionResult> GetUser(string id)
     {
-        var user = await _service.GetUser(new Guid(id));
-        if (user == null) return NotFound();
-        return Ok(user);
+        try
+        {
+            var user = await _service.GetUser(new Guid(id));
+            return Ok(user);
+        }
+        catch (InvalidDataException ex)
+        {
+            return NotFound(ex.Message);
+        }
     }
 
     [HttpPut()]
