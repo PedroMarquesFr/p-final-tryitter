@@ -4,10 +4,8 @@ namespace Tryitter.Web.Models
     {
         public Guid PostId { get; set; }
         public string Content { get; set; } = null!;
-        public string Password { get; set; } = null!;
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }                                                                         
-
         public User? User { get; set; }
     }
 }
