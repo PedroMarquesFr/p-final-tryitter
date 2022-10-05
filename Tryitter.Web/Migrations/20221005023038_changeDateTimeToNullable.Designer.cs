@@ -12,8 +12,8 @@ using Tryitter.Web.Repository;
 namespace Tryitter.Web.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20221005011345_removedPasswordFromPostTable")]
-    partial class removedPasswordFromPostTable
+    [Migration("20221005023038_changeDateTimeToNullable")]
+    partial class changeDateTimeToNullable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -34,13 +34,13 @@ namespace Tryitter.Web.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UserId")
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("PostId");
@@ -77,7 +77,9 @@ namespace Tryitter.Web.Migrations
                 {
                     b.HasOne("Tryitter.Web.Models.User", "User")
                         .WithMany("Posts")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });

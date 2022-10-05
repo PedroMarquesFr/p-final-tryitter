@@ -8,13 +8,16 @@ namespace Tryitter.Web.Services;
 public class PostService : IPostService
 {
     private readonly IPostRepository _repository;
-    public PostService(IPostRepository repository)
+    private readonly IUserRepository _userRepository;
+    public PostService(IPostRepository repository, IUserRepository userRepository)
     {
         _repository = repository;
+        _userRepository = userRepository;
     }
 
     public async Task<Post> CreatePost(Post post)
     {
+        // _userRepository
         return await _repository.Add(post);
     }
 
