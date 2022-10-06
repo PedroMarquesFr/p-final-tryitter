@@ -200,7 +200,7 @@ namespace Tryitter.Test.Service
             Func<Task> act = async () => await service.UpdateUser(userDTO);     
 
             //Assert
-            await act.Should().ThrowAsync<ArgumentException>().WithMessage("User doesnt exists.");
+            await act.Should().ThrowAsync<ArgumentException>().WithMessage("User doesnt exist.");
         }
     }
 }
