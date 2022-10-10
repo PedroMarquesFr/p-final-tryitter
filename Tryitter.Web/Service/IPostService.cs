@@ -9,5 +9,5 @@ public interface IPostService
   public Task DeletePost(Guid id);
   public Task<Post> Update(PostDTO post);
   public Task<Post>? GetPost(Guid id);
-  public Task<IEnumerable<Post>> GetPostsByUser(Guid UserId);
+  public Task<User> GetPostsByUser(Guid UserId);
 }

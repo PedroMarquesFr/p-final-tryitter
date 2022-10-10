@@ -63,17 +63,31 @@ public class UserController : Controller
     [Authorize]
     public async Task<IActionResult> GetUser(string id)
     {
-        var user = await _service.GetUser(new Guid(id));
-        if (user == null) return NotFound();
-        return Ok(user);
+        try
+        {
+            var user = await _service.GetUser(new Guid(id));
+            return Ok(user);
+        }
+        catch (InvalidDataException ex)
+        {
+            return NotFound(ex.Message);
+        }
     }
 
     [HttpPut()]
     [Authorize]
     public async Task<IActionResult> UpdateUser(UserDTO user)
     {
-        var updatedUser = await _service.UpdateUser(user);
-        return Ok(updatedUser);
+        try
+        {
+            var updatedUser = await _service.UpdateUser(user);
+            return Ok(updatedUser);
+        }
+        catch (ArgumentException ex)
+        {
+            return NotFound(ex.Message);
+        }
+
     }
 
 

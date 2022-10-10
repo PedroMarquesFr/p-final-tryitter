@@ -26,27 +26,27 @@ public class UserService : IUserService
     public async Task<User> CreateUser(User user)
     {
         var userExists = await _repository.GetUserByLoginName(user.Login)!;
-        if (userExists != null) throw new ArgumentException("User already exists.");
+        if (userExists != null) throw new ArgumentException("User already exist.");
         var output = await _repository.Add(user);
         return output;
     }
 
     public async Task DeleteUser(Guid id)
     {
-        var userExists = await _repository.Get(id);
-        if (userExists is null) throw new ArgumentException("User doesnt exists.");
+        var userExists = await _repository.Get(id); 
+        if (userExists is null) throw new ArgumentException("User doesnt exist.");
         await _repository.Delete(id);
     }
     public async Task<User?> GetUser(Guid UserId)
     {
         var user = await _repository.Get(UserId);
-        // if (userExists != null) throw new ArgumentException("User already exists");
+        if (user == null) throw new InvalidDataException("User not found");
         return user;
     }
     public async Task<User> UpdateUser(UserDTO userdto)
     {
         var userExists = await _repository.Get(userdto.UserId);
-        if (userExists is null) throw new ArgumentException("User doesnt exists.");
+        if (userExists is null) throw new ArgumentException("User doesnt exist.");
         User user = new()
         {
             UserId = userExists.UserId,
