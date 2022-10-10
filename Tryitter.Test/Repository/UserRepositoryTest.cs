@@ -1,57 +1,58 @@
-// using Tryitter.Web.Models;
-// using Tryitter.Test.Repository;
-// using Tryitter.Web.Services;
-// using Tryitter.Web.Repository;
-// using System;
-// using System.Threading.Tasks;
+using Tryitter.Web.Models;
+using Tryitter.Test.Repository;
+using Tryitter.Web.Services;
+using Tryitter.Web.Repository;
+using System;
+using System.Threading.Tasks;
 
-// namespace Tryitter.Test.Service
-// {
-//     public class UserRepositoryTest
-//     {
-//         [Theory]
-//         [InlineData("Joao", "joao123", "1234")]
-//         [InlineData("Albert", "1234", "senha123")]
-//         [InlineData("a", "a123", "1010")]
-//         public async void ShouldCreateAnUser(string nickname, string login, string password)
-//         {
-//             //Arrange
-//             TryitterTestContext tryitterTestContext = new();
-//             UserRepository userRepository = new(tryitterTestContext);
+namespace Tryitter.Test.Service
+{
+    public class UserRepositoryTest
+    {
+        [Theory]
+        [InlineData("Joao", "joao123", "1234")]
+        [InlineData("Albert", "1234", "senha123")]
+        [InlineData("a", "a123", "1010")]
+        public async void ShouldCreateAnUser(string nickname, string login, string password)
+        {
+            //Arrange
+            TryitterTestContext tryitterTestContext = new();
+            UserRepository userRepository = new(tryitterTestContext);
 
-//             User user = new() { Nickname = nickname, Login = login, Password = password };
+            User user = new() { Nickname = nickname, Login = login, Password = password };
 
-//             //Act
-//             var result = await userRepository.Add(user);
-//             var userSaved = await userRepository.Get(result.UserId);
+            //Act
+            var result = await userRepository.Add(user);
+            var userSaved = await userRepository.Get(result.UserId);
 
-//             //Assert
-//             result.Should().Be(user);
-//             userSaved.Should().Be(user);
+            //Assert
+            result.Should().Be(user);
+            userSaved.Should().BeEquivalentTo(user);
 
-//         }
+        }
 
-//         [Theory]
-//         [InlineData("Joao", "joao123", "1234")]
-//         [InlineData("Albert", "1234", "senha123")]
-//         [InlineData("a", "a123", "1010")]
-//         public async void ShouldThrownAnErrorWhenUserWithTheSameLoginAlreadyExists(string nickname, string login, string password)
-//         {
-//             //Arrange
-//             User user = new() { Nickname = nickname, Login = login, Password = password };
-//             var context = new TryitterTestContext();
-//             var mockRepository = new Mock<IUserRepository>();
+        [Theory]
+        [InlineData("Joao", "joao123", "1234")]
+        [InlineData("Albert", "1234", "senha123")]
+        [InlineData("a", "a123", "1010")]
+        public async void ShouldDeleteAnUser(string nickname, string login, string password)
+        {
+            //Arrange
+            TryitterTestContext tryitterTestContext = new();
+            UserRepository userRepository = new(tryitterTestContext);
 
-//             mockRepository.Setup(library => library.GetUserByLoginName(login)).ReturnsAsync(user); //forcar a funcao a retornar um valor assincrono
-//             mockRepository.Setup(library => library.Add(user)).ReturnsAsync(user);
+            User user = new() { Nickname = nickname, Login = login, Password = password };
 
-//             var service = new UserService(mockRepository.Object);
+            //Act
+            var result = await userRepository.Add(user);
+            var userSaved = await userRepository.Get(result.UserId);
+            userSaved.Should().BeEquivalentTo(user);
+            await userRepository.Delete(result.UserId); 
 
-//             //Act
-//             Func<Task> act = async () => await service.CreateUser(user);
+            //Assert
+            var userOnDatabase = await userRepository.GetAll();
+            // userOnDatabase.Count.Should().BeEmpty();
 
-//             //Assert
-//             await act.Should().ThrowAsync<ArgumentException>();
-//         }
-//     }
-// }
+        }
+    }
+}

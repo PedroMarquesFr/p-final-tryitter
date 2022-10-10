@@ -38,20 +38,13 @@ public class PostService : IPostService
 
         if (postExist is null) throw new InvalidOperationException("Post doesn't exists");
 
-        Post newPost = new()
-        {
-          PostId = postExist.PostId,
-          Content = postdto.Content is null ? postExist.Content : postdto.Content,
-          CreatedAt = postExist.CreatedAt,
-          UpdatedAt = postdto.UpdatedAt,
-          UserId = postExist.UserId
-        };
+        postExist.Content = postdto.Content is null ? postExist.Content : postdto.Content;
+        postExist.UpdatedAt = postdto.UpdatedAt;
+        postExist.UserId = postdto.UserId;
 
-        await _repository.Update(newPost);
+        await _repository.Update(postExist);
 
-        return newPost;
-
-
+        return postExist;
     }
     public async Task<Post>? GetPost(Guid id)
     {
@@ -62,8 +55,10 @@ public class PostService : IPostService
         return postExist;
     }
 
-    public async Task<IEnumerable<Post>> GetPostsByUser(Guid UserId)
+    public async Task<User> GetPostsByUser(Guid UserId)
     {
-      return await _repository.GetPostsByUser(UserId);
+        var user = await _repository.GetPostsByUser(UserId);
+        Console.WriteLine(user.Nickname);
+        return user;
     }
 }

@@ -43,9 +43,9 @@ public class PostRepository : IPostRepository
         return post!;
     }
 
-    public async Task<ICollection<Post>> GetPostsByUser(Guid UserId)
+    public async Task<User> GetPostsByUser(Guid UserId)
     {
-        var userWithPosts = await _context.Post.Where(u => u.UserId == UserId).ToListAsync();
+        var userWithPosts = await _context.User.AsNoTracking().Where(u => u.UserId == UserId).Include(user => user.Posts).FirstAsync();
 
         return userWithPosts;
     }

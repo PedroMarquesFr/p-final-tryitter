@@ -8,7 +8,7 @@ using Tryitter.Web.Repository;
 
 public class TryitterTestContext : DatabaseContext
 {
-    public DbSet<User> User { get; set; }
+    public DbSet<User> User1 { get; set; } = null!;
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -17,7 +17,7 @@ public class TryitterTestContext : DatabaseContext
             .BuildServiceProvider();
 
         //usamos a função UseInMemoryDatabase() para indicar que usaremos um banco de dados utilizando a memória interna 
-        optionsBuilder.UseInMemoryDatabase("User").UseInternalServiceProvider(serviceProvider);
+        optionsBuilder.UseInMemoryDatabase("User1").UseInternalServiceProvider(serviceProvider);
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -26,11 +26,11 @@ public class TryitterTestContext : DatabaseContext
         modelBuilder.Entity<User>()
           .HasKey(i => i.UserId);
 
-        // modelBuilder.Entity<Post>()
-        //   .HasOne(i => i.User)
-        //   .WithMany(i => i.Posts)
-        //   .HasForeignKey(b => b.UserId)
-        //   .OnDelete(DeleteBehavior.Cascade);
+        modelBuilder.Entity<Post>()
+          .HasOne(i => i.User)
+          .WithMany(i => i.Posts)
+          .HasForeignKey(b => b.UserId)
+          .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<User>()
           .HasMany(i => i.Posts)

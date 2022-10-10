@@ -78,8 +78,16 @@ public class UserController : Controller
     [Authorize]
     public async Task<IActionResult> UpdateUser(UserDTO user)
     {
-        var updatedUser = await _service.UpdateUser(user);
-        return Ok(updatedUser);
+        try
+        {
+            var updatedUser = await _service.UpdateUser(user);
+            return Ok(updatedUser);
+        }
+        catch (ArgumentException ex)
+        {
+            return NotFound(ex.Message);
+        }
+
     }
 
 
