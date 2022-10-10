@@ -58,7 +58,6 @@ public class PostService : IPostService
     public async Task<User> GetPostsByUser(Guid UserId)
     {
         var user = await _repository.GetPostsByUser(UserId);
-        Console.WriteLine(user.Nickname);
         return user;
     }
 }

@@ -23,9 +23,6 @@ public class PostController : Controller
     {
         try
         {
-            // var identity = HttpContext.User.Identity as ClaimsIdentity;
-            // Console.WriteLine(identity.Name);
-            // post.UserId = identity.Name;
             var output = await _service.CreatePost(post);
             return CreatedAtAction("GetPost", new { id = output.UserId }, output);
         }
@@ -85,7 +82,6 @@ public class PostController : Controller
     [Authorize]
     public async Task<IActionResult> UpdatePost(PostDTO post)
     {
-        Console.WriteLine(post.ToString());
         var result = await _service.Update(post);
         return Ok(result);
     }
