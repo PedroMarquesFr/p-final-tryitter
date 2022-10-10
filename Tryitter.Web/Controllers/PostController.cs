@@ -65,26 +65,29 @@ public class PostController : Controller
         }
     }
 
-    // [HttpGet("/user/{id}")]
-    // [Authorize]
-    // public async Task<IActionResult> GetPostByUser(Guid userid)
-    // {
-    //     try
-    //     {
-    //         var post = await _service.GetPostsByUser(userid)!;
-    //         return Ok(post);
-    //     }
-    //     catch (ArgumentException ex)
-    //     {
-    //         return BadRequest(ex.Message);
-    //     }
-    // }
+    [HttpGet("user/{userId}")]
+    [Authorize]
+    public async Task<IActionResult> GetPostByUser(Guid userId)
+    {
+        try
+        {
+
+            var post = await _service.GetPostsByUser(userId)!;
+            return Ok(post);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 
     [HttpPut()]
     [Authorize]
     public async Task<IActionResult> UpdatePost(PostDTO post)
     {
-        return Ok(await _service.Update(post));
+        Console.WriteLine(post.ToString());
+        var result = await _service.Update(post);
+        return Ok(result);
     }
 
 
