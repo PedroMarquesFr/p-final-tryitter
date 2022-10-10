@@ -30,6 +30,7 @@ public class UserRepository : IUserRepository
 
     public async Task Update(User user)
     {
+        _context.ChangeTracker.Clear(); // observaar funcionamento
         _context.Update(user);
 
         await _context.SaveChangesAsync();
