@@ -17,7 +17,10 @@ public class PostService : IPostService
 
     public async Task<Post> CreatePost(Post post)
     {
-        // _userRepository
+        var userExist = await _userRepository.Get(post.UserId)!;
+
+        if (userExist is null) throw new InvalidOperationException("User doesn't exists");
+
         return await _repository.Add(post);
     }
 
@@ -25,7 +28,7 @@ public class PostService : IPostService
     {
         var postExist = await _repository.Get(id)!;
 
-        if (postExist is null) throw new ArgumentException("Post doesn't exists");
+        if (postExist is null) throw new InvalidOperationException("Post doesn't exists");
 
         await _repository.Delete(postExist.PostId);
     }
@@ -33,8 +36,7 @@ public class PostService : IPostService
     {
         var postExist = await _repository.Get(postdto.PostId)!;
 
-        if (postExist is null) throw new ArgumentException("Post doesn't exists");
-
+        if (postExist is null) throw new InvalidOperationException("Post doesn't exists");
 
         postExist.Content = postdto.Content is null ? postExist.Content : postdto.Content;
         postExist.UpdatedAt = postdto.UpdatedAt;
@@ -48,7 +50,7 @@ public class PostService : IPostService
     {
         var postExist = await _repository.Get(id)!;
 
-        if (postExist is null) throw new ArgumentException("Post doesn't exists");
+        if (postExist is null) throw new InvalidOperationException("Post doesn't exists");
 
         return postExist;
     }
