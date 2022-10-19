@@ -55,9 +55,9 @@ public class PostService : IPostService
         return postExist;
     }
 
-    public async Task<User> GetPostsByUser(Guid UserId)
+    public async Task<ICollection<Post>> GetPostsByUser(Guid UserId, int page, int take)
     {
-        var user = await _repository.GetPostsByUser(UserId);
-        return user;
+        var posts = await _repository.GetPostsByUser(UserId, page, take);
+        return posts;
     }
 }
