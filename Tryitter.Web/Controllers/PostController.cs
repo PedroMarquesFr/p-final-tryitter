@@ -64,12 +64,12 @@ public class PostController : Controller
 
     [HttpGet("user/{userId}")]
     [Authorize]
-    public async Task<IActionResult> GetPostByUser(Guid userId)
+    public async Task<IActionResult> GetPostByUser(Guid userId,[FromQuery] int page, [FromQuery] int take)
     {
         try
         {
 
-            var post = await _service.GetPostsByUser(userId)!;
+            var post = await _service.GetPostsByUser(userId, page, take)!;
             return Ok(post);
         }
         catch (ArgumentException ex)
