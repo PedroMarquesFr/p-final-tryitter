@@ -43,6 +43,13 @@ public class PostRepository : IPostRepository
         return post!;
     }
 
+    public async Task<ICollection<Post>> GetPosts(int page, int take)
+    {
+        var skip = page * take;
+        var posts = await _context.Post!.OrderByDescending(p => p.CreatedAt).Skip(skip).Take(take).ToListAsync();
+
+        return posts;
+    }
     public async Task<ICollection<Post>> GetPostsByUser(Guid UserId, int page, int take)
     {
         var skip = page * take;

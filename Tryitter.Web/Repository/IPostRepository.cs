@@ -7,5 +7,7 @@ public interface IPostRepository
     public Task Delete(Guid id);
     public Task Update(Post post);
     public Task<Post>? Get(Guid PostId);
+    public Task<ICollection<Post>> GetPosts(int page, int take);
+
     public Task<ICollection<Post>> GetPostsByUser(Guid UserId, int page, int take);
 }

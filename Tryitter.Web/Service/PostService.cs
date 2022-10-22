@@ -55,9 +55,20 @@ public class PostService : IPostService
         return postExist;
     }
 
+    public async Task<ICollection<Post>> GetPosts(int page, int take)
+    {
+        var posts = await _repository.GetPosts(page, take);
+        
+        return posts;
+    }
     public async Task<ICollection<Post>> GetPostsByUser(Guid UserId, int page, int take)
     {
+        var userExist = await _userRepository.Get(UserId)!;
+
+        if (userExist is null) throw new InvalidOperationException("User doesn't exists");
+
         var posts = await _repository.GetPostsByUser(UserId, page, take);
+
         return posts;
     }
 }
