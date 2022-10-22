@@ -276,6 +276,7 @@ namespace Tryitter.Test.Service
             var mockUserRepository = new Mock<IUserRepository>();
 
             mockRepository.Setup(library => library.GetPostsByUser(user.UserId, 0, 3)).ReturnsAsync(posts);
+            mockUserRepository.Setup(library => library.Get(user.UserId)).ReturnsAsync(user);
 
             var service = new PostService(mockRepository.Object, mockUserRepository.Object);
 
