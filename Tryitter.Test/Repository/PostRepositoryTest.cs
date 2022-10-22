@@ -120,32 +120,58 @@ namespace Tryitter.Test.Service
             newPost.Content.Should().Be(newContent);
         }
 
-        // [Theory]
-        // [InlineData("Olá, mundo!", "2909656f-3e43-4e88-3c3b-08daa806d4b3")]
-        // [InlineData("SegundoTeste", "2909656f-3e43-4e88-3c3b-08daa806d4b3")]
-        // [InlineData("TRYITTER", "2909656f-3e43-4e88-3c3b-08daa806d4b3")]
-        // public async void ShouldGetPostsByUser(string content, string postId)
-        // {
-        //     //Arrange
-        //     TryitterTestContext tryitterTestContext = new();
-        //     UserRepository userRepository = new(tryitterTestContext);
-        //     PostRepository postRepository = new(tryitterTestContext);
+        [Theory]
+        [InlineData("Olá, mundo!", "2909656f-3e43-4e88-3c3b-08daa806d4b3")]
+        [InlineData("SegundoTeste", "2909656f-3e43-4e88-3c3b-08daa806d4b3")]
+        [InlineData("TRYITTER", "2909656f-3e43-4e88-3c3b-08daa806d4b3")]
+        public async void ShouldGetPosts(string content, string postId)
+        {
+            //Arrange
+            TryitterTestContext tryitterTestContext = new();
+            UserRepository userRepository = new(tryitterTestContext);
+            PostRepository postRepository = new(tryitterTestContext);
 
-        //     User user = new() { Nickname = "teste", Login = "teste@gmail.com", Password = "senha123" };
+            User user = new() { Nickname = "teste", Login = "teste@gmail.com", Password = "senha123" };
 
-        //     //Act
-        //     var newUser = await userRepository.Add(user);
+            //Act
+            var newUser = await userRepository.Add(user);
 
-        //     Post post = new() { Content = content, UserId = newUser.UserId, PostId = Guid.Parse(postId)};
+            Post post = new() { Content = content, UserId = newUser.UserId, PostId = Guid.Parse(postId)};
 
-        //     await postRepository.Add(post);
+            await postRepository.Add(post);
 
-        //     var result = await postRepository.GetPostsByUser(newUser.UserId); // ERRO: USER NÃO ESTÁ SENDO PREENCHIDO POR POSTS
+            var result = await postRepository.GetPosts(0, 3);
 
-        //     //Assert
-        //     result.Should().BeOfType<User>();
-        //     result.Posts.Should().NotBeEmpty();
-        //     result.Posts.Should().Contain(post);
-        // }
+            //Assert
+            result.Should().NotBeNullOrEmpty();
+            result.Should().Contain(post);
+        }
+
+        [Theory]
+        [InlineData("Olá, mundo!", "2909656f-3e43-4e88-3c3b-08daa806d4b3")]
+        [InlineData("SegundoTeste", "2909656f-3e43-4e88-3c3b-08daa806d4b3")]
+        [InlineData("TRYITTER", "2909656f-3e43-4e88-3c3b-08daa806d4b3")]
+        public async void ShouldGetPostsByUser(string content, string postId)
+        {
+            //Arrange
+            TryitterTestContext tryitterTestContext = new();
+            UserRepository userRepository = new(tryitterTestContext);
+            PostRepository postRepository = new(tryitterTestContext);
+
+            User user = new() { Nickname = "teste", Login = "teste@gmail.com", Password = "senha123" };
+
+            //Act
+            var newUser = await userRepository.Add(user);
+
+            Post post = new() { Content = content, UserId = newUser.UserId, PostId = Guid.Parse(postId)};
+
+            await postRepository.Add(post);
+
+            var result = await postRepository.GetPostsByUser(newUser.UserId, 0, 3);
+
+            //Assert
+            result.Should().NotBeNullOrEmpty();
+            result.Should().Contain(post);
+        }
     }
 }

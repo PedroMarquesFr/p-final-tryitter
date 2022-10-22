@@ -226,62 +226,95 @@ namespace Tryitter.Test.Service
             await act.Should().ThrowAsync<InvalidOperationException>().WithMessage("Post doesn't exists");
         }
 
-        // [Theory]
-        // [InlineData("Olá, mundo!", "2909656f-3e43-4e88-3c3b-08daa806d4b3")]
-        // [InlineData("SegundoTeste", "2909656f-3e43-4e88-3c3b-08daa806d4b3")]
-        // [InlineData("TRYITTER", "2909656f-3e43-4e88-3c3b-08daa806d4b3")]
-        // public async void ShouldGetPostsByUser(string content, Guid UserId)
-        // {
-        //     //Arrange
-        //     Post post = new() { Content = content, UserId = UserId };
-        //     User user = new() { Nickname = "Oi", Login = "email@gmail.com", Password = "12345678" };
+        [Theory]
+        [InlineData("Olá, mundo!", "Post 2", "2909656f-3e43-4e88-3c3b-08daa806d4b3")]
+        [InlineData("SegundoTeste", "Post 2", "2909656f-3e43-4e88-3c3b-08daa806d4b3")]
+        [InlineData("TRYITTER", "Post 2", "2909656f-3e43-4e88-3c3b-08daa806d4b3")]
+        public async void ShouldGetPosts(string content, string newContent, Guid UserId)
+        {
+            //Arrange
+            Post post1 = new() { Content = content, UserId = UserId };
+            Post post2 = new() { Content = newContent, UserId = UserId };
 
-        //     var context = new TryitterTestContext();
-        //     var mockRepository = new Mock<IPostRepository>();
-        //     var mockUserRepository = new Mock<IUserRepository>();
+            User user = new() { Nickname = "Oi", Login = "email@gmail.com", Password = "12345678" };
+            user.UserId = UserId;
 
+            Post [] posts = { post1, post2 };
 
-        //     mockUserRepository.Setup(library => library.Get(UserId)).ReturnsAsync(user);
-        //     // mockRepository.Setup(library => library.Get(post.PostId)).ReturnsAsync(post);
-        //     mockRepository.Setup(library => library.Add(post)).ReturnsAsync(post);
+            var context = new TryitterTestContext();
+            var mockRepository = new Mock<IPostRepository>();
+            var mockUserRepository = new Mock<IUserRepository>();
 
-        //     var service = new PostService(mockRepository.Object, mockUserRepository.Object);
+            mockRepository.Setup(library => library.GetPosts(0, 3)).ReturnsAsync(posts);
 
-        //     //Act
-        //     var output = await service.GetPostsByUser(UserId)!;
+            var service = new PostService(mockRepository.Object, mockUserRepository.Object);
 
-        //     //Assert
-        //     // await act.Should().NotThrowAsync<InvalidDataException>();
-        //     output.Should().Contain(post);
+            //Act
+            var output = await service.GetPosts(0, 3)!;
 
-        // }
+            //Assert
+            output.Should().NotBeNullOrEmpty();
+            output.Should().Contain(post1);
+            output.Should().Contain(post2);
+        }
+        
+        [Theory]
+        [InlineData("Olá, mundo!", "Post 2", "2909656f-3e43-4e88-3c3b-08daa806d4b3")]
+        [InlineData("SegundoTeste", "Post 2", "2909656f-3e43-4e88-3c3b-08daa806d4b3")]
+        [InlineData("TRYITTER", "Post 2", "2909656f-3e43-4e88-3c3b-08daa806d4b3")]
+        public async void ShouldGetPostsByUser(string content, string newContent, Guid UserId)
+        {
+            //Arrange
+            Post post1 = new() { Content = content, UserId = UserId };
+            Post post2 = new() { Content = newContent, UserId = UserId };
+            User user = new() { Nickname = "Oi", Login = "email@gmail.com", Password = "12345678" };
+            user.UserId = UserId;
+            Post [] posts = { post1, post2 };
 
-        // [Theory]
-        // [InlineData("Olá, mundo!", "2909656f-3e43-4e88-3c3b-08daa806d4b3")]
-        // [InlineData("SegundoTeste", "2909656f-3e43-4e88-3c3b-08daa806d4b3")]
-        // [InlineData("TRYITTER", "2909656f-3e43-4e88-3c3b-08daa806d4b3")]
-        // public async void ShouldThrowExceptionWhenUserIsNotFound(string content, Guid UserId)
-        // {
-        //     //Arrange
-        //     Post post = new() { Content = content, UserId = UserId };
-        //     User user = new() { Nickname = "Oi", Login = "email@gmail.com", Password = "12345678" };
+            var context = new TryitterTestContext();
+            var mockRepository = new Mock<IPostRepository>();
+            var mockUserRepository = new Mock<IUserRepository>();
 
-        //     var context = new TryitterTestContext();
-        //     var mockRepository = new Mock<IPostRepository>();
-        //     var mockUserRepository = new Mock<IUserRepository>();
+            mockRepository.Setup(library => library.GetPostsByUser(user.UserId, 0, 3)).ReturnsAsync(posts);
+            mockUserRepository.Setup(library => library.Get(user.UserId)).ReturnsAsync(user);
 
+            var service = new PostService(mockRepository.Object, mockUserRepository.Object);
 
-        //     mockUserRepository.Setup(library => library.Get(UserId)).ReturnsAsync(user);
-        //     // mockRepository.Setup(library => library.Get(post.PostId)).ReturnsAsync(post);
-        //     mockRepository.Setup(library => library.Add(post)).ReturnsAsync(post);
+            //Act
+            var output = await service.GetPostsByUser(user.UserId, 0, 3)!;
 
-        //     var service = new PostService(mockRepository.Object, mockUserRepository.Object);
+            //Assert
+            output.Should().NotBeNullOrEmpty();
+            output.Should().Contain(post1);
+            output.Should().Contain(post2);
+        }
 
-        //     //Act
-        //     Func<Task> act = async () => await service.GetPostsByUser(UserId)!;
+        [Theory]
+        [InlineData("EU NÃO EXISTO", "Post 2", "dc9ef1ba-9191-4f0c-8145-f2f538dd2c0e")]
+        [InlineData("VAI DAR RUIM", "Post 2", "dc9ef1ba-9191-4f0c-8145-f2f538dd2c0e")]
+        [InlineData("ERRROUUUUU!!", "Post 2", "dc9ef1ba-9191-4f0c-8145-f2f538dd2c0e")]
+        public async void ShouldThrowExceptionWhenUserIsNotFound(string content, string newContent, Guid UserId)
+        {
+            //Arrange
+            Post post1 = new() { Content = content, UserId = UserId };
+            Post post2 = new() { Content = newContent, UserId = UserId };
+            User user = new() { Nickname = "Oi", Login = "email@gmail.com", Password = "12345678" };
+            user.UserId = UserId;
+            Post [] posts = { post1, post2 };
 
-        //     //Assert
-        //     await act.Should().NotThrowAsync<InvalidDataException>();
-        // }
+            var context = new TryitterTestContext();
+            var mockRepository = new Mock<IPostRepository>();
+            var mockUserRepository = new Mock<IUserRepository>();
+
+            mockRepository.Setup(library => library.GetPostsByUser(user.UserId, 0, 3)).ReturnsAsync(posts);
+
+            var service = new PostService(mockRepository.Object, mockUserRepository.Object);
+
+            //Act
+            Func<Task> act = async () => await service.GetPostsByUser(UserId, 0, 3);
+
+            //Assert
+            await act.Should().ThrowAsync<InvalidOperationException>().WithMessage("User doesn't exists");
+        }
     }
 }

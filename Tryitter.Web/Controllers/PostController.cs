@@ -62,13 +62,31 @@ public class PostController : Controller
         }
     }
 
+    [HttpGet()]
+    [Authorize]
+    public async Task<IActionResult> GetPostByUser([FromQuery] int page, [FromQuery] int take)
+    {
+        if (take > 25) return BadRequest();
+
+        try
+        {
+            var post = await _service.GetPosts(page, take)!;
+            return Ok(post);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+    
     [HttpGet("user/{userId}")]
     [Authorize]
     public async Task<IActionResult> GetPostByUser(Guid userId,[FromQuery] int page, [FromQuery] int take)
     {
+        if (take > 25) return BadRequest();
+
         try
         {
-
             var post = await _service.GetPostsByUser(userId, page, take)!;
             return Ok(post);
         }
@@ -85,6 +103,5 @@ public class PostController : Controller
         var result = await _service.Update(post);
         return Ok(result);
     }
-
 
 }

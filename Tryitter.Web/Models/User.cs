@@ -16,7 +16,7 @@ namespace Tryitter.Web.Models
         public string Login { get; set; } = null!;
 
         [Required]
-        [StringLength(15, MinimumLength = 8, ErrorMessage = "Invalid login length")]
+        [StringLength(15, MinimumLength = 8, ErrorMessage = "Invalid password length")]
         public string Password { get; set; } = null!;
 
         public ICollection<Post>? Posts { get; set; }
