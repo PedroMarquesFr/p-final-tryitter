@@ -23,8 +23,6 @@ public class UserRepository : IUserRepository
         var result = _context.User.Include(e => e.Posts).Single(p => p.UserId == id);
         _context.Remove(result);
 
-        // if (result.Posts is not null) _context.Remove(result.Posts);
-
         await _context.SaveChangesAsync();
     }
 

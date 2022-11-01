@@ -19,6 +19,8 @@ namespace Tryitter.Web.Models
         [StringLength(15, MinimumLength = 8, ErrorMessage = "Invalid password length")]
         public string Password { get; set; } = null!;
 
+        public byte[]? ProfileImage { get; set; }
+
         public ICollection<Post>? Posts { get; set; }
     }
 }
