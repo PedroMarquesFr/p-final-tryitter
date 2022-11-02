@@ -31,7 +31,7 @@ jobs:
       with:
         push: true
         tags: mcr.microsoft.com/${{ secrets.AzureAppService_ContainerUsername_ded6fd0e4b914d1e99a1a934096c4b38 }}/pp10/tryitter:${{ github.sha }}
-        file: ./Dockerfile
+        file: ./Tryitter.Web/Dockerfile
 
   deploy:
     runs-on: ubuntu-latest
