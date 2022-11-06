@@ -4,11 +4,16 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 using Tryitter.Web.Constants;
 using Microsoft.IdentityModel.Tokens;
-// using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
-var builder = WebApplication.CreateBuilder(args);
+// var builder = WebApplication.CreateBuilder(args);
+var webApplicationOptions = new WebApplicationOptions
+{
+    ContentRootPath = AppContext.BaseDirectory,
+    Args = args,
+};    
+var builder = WebApplication.CreateBuilder(webApplicationOptions);
 
 builder.Services.AddCors(options =>
 {

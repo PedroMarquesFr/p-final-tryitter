@@ -14,6 +14,7 @@ namespace Tryitter.Web.Controllers
         [Required]
         [StringLength(15, MinimumLength = 8, ErrorMessage = "Invalid login length")]
         public string? Password { get; set; } = null!;
+        public byte[]? ProfileImage { get; set; }
     }
     public class LoginData
     {

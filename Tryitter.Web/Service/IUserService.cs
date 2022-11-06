@@ -9,5 +9,6 @@ public interface IUserService
     public Task<User> UpdateUser(UserDTO user);
     public Task<User?> GetUser(Guid UserId);
     public Task<dynamic> Authenticate(LoginData loginData);
+    public Task<User?> CreateUserProfileImage(Guid UserId, byte[] imageIn);
     //   public IEnumerable<User> GetAll();
 }

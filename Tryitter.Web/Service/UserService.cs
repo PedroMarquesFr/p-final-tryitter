@@ -31,6 +31,15 @@ public class UserService : IUserService
         return output;
     }
 
+    public async Task<User?> CreateUserProfileImage(Guid UserId, byte[] imageIn)
+    {
+        var user = await _repository.Get(UserId);
+        if (user == null) throw new InvalidDataException("User not found");
+        user.ProfileImage = imageIn;
+        await _repository.Update(user);
+        return user;
+    }
+
     public async Task DeleteUser(Guid id)
     {
         var userExists = await _repository.Get(id); 
@@ -52,7 +61,8 @@ public class UserService : IUserService
             UserId = userExists.UserId,
             Nickname = userdto.Nickname is null ? userExists.Nickname : userdto.Nickname,
             Login = userExists.Login,
-            Password = userdto.Password is null ? userExists.Password : userdto.Password
+            Password = userdto.Password is null ? userExists.Password : userdto.Password,
+            ProfileImage = userdto.ProfileImage is null ? userExists.ProfileImage : userdto.ProfileImage
         };
         await _repository.Update(user);
         return user;

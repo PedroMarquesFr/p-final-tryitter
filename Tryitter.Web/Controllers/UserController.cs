@@ -28,7 +28,7 @@ public class UserController : Controller
             return BadRequest(ex.Message);
         }
     }
-
+    
     [HttpPost()]
     [AllowAnonymous]
     public async Task<IActionResult> CreateUser([FromBody] User user)
@@ -42,6 +42,26 @@ public class UserController : Controller
         {
             return BadRequest(ex.Message);
         }
+    }
+
+    [HttpPost("image/{id}")]
+    public async Task<IActionResult> PostImage([FromForm] IFormFile img, Guid id)
+    {
+      using (var memoryStream = new MemoryStream())
+          {
+              await img.CopyToAsync(memoryStream);
+
+              if (memoryStream.Length < 2097152)
+              {
+                  var imageIn = memoryStream.ToArray();
+                  await _service.CreateUserProfileImage(id, imageIn);
+                  return Ok("Uploaded");
+              }
+              else
+              {
+                  return BadRequest("The file is too large to upload.");
+              }
+          }
     }
 
     [HttpDelete("{id}")]
